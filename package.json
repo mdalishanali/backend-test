@@ -30,9 +30,6 @@
     "server-test-win": "SET NODE_ENV=test&& node verifyEnvBackEnd.js && tsc --project lib && mocha test --timeout 10000 --exit",
     "add-mock-data": "node mock-data-generator.js"
   },
-  "engines": {
-    "node": "10.16.0"
-  },
   "pre-commit": [
     "tslint-pre"
   ],
