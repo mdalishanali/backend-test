@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../lib/routes/aws/index.ts"],"names":[],"mappings":";;;AAAA,iCAAmC;AACnC,mCAAqC;AAErC;IAEE;QACE,IAAI,CAAC,MAAM,GAAG,OAAO,CAAC,MAAM,EAAE,CAAC;QAC/B,IAAI,CAAC,MAAM,CAAC,GAAG,CAAC,cAAc,EAAE,kBAAS,CAAC,eAAe,CAAC,CAAC;IAC7D,CAAC;IACH,gBAAC;AAAD,CAAC,AAND,IAMC;AANY,8BAAS"}

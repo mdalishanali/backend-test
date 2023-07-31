@@ -2,7 +2,7 @@
 dist/
 
 #backend compiled dir
-server/
+# server/
 
 # Logs
 logs

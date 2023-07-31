@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../../lib/routes/webhooks/subscriptions/index.ts"],"names":[],"mappings":";;;AAAA,iCAAmC;AACnC,mCAA+C;AAC/C;IAEI;QACI,IAAI,CAAC,MAAM,GAAG,OAAO,CAAC,MAAM,EAAE,CAAC;QAC/B,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,GAAG,EAAE,4BAAmB,CAAC,gCAAgC,CAAC,CAAC;IAChF,CAAC;IACL,0BAAC;AAAD,CAAC,AAND,IAMC;AANY,kDAAmB"}
