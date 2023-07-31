@@ -32,8 +32,14 @@ try {
   // Point static path to dist
   app.use(express.static(path.join(__dirname, '../../dist')));
 
+
+  app.get("/", (req, res) => {
+    res.send("<h1>Hello world</h1>")
+  })
+
   // Set our api routes
   app.use('/api', api);
+
   app.use('/raman', (req, res) => {
     res.send('HI');
   });
