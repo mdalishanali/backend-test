@@ -6,11 +6,16 @@ import * as StandardError from 'standard-error';
 import * as moment from 'moment';
 import { config } from '../../config';
 
-const JWT_SECRET: string = config.JWT_SECRET ? config.JWT_SECRET : 'i am a tea pot';
+const JWT_SECRET: string = config.JWT_SECRET
+  ? config.JWT_SECRET
+  : 'i am a tea pot';
 
 const createInviteMailData = (email: string, protocol: string) => {
   const host = `${protocol}://${config.HOST}`;
-  const token = jwt.sign({ exp: Math.floor(Date.now() / 1000) + (60 * 60), email: email }, JWT_SECRET);
+  const token = jwt.sign(
+    { exp: Math.floor(Date.now() / 1000) + 60 * 60, email: email },
+    JWT_SECRET
+  );
   const link = `${host}/api/accept-invite/invite/?inviteToken=${token}`;
   const mailData = {
     email,
@@ -21,23 +26,26 @@ const createInviteMailData = (email: string, protocol: string) => {
 
 export const addCompanyInAUser = async (user) => {
   if (!Boolean(user.companyId)) {
-    const createdCompany = await Company.create({ name: user.email, userId: user._id });
-    await User.updateOne(
-      { _id: user._id },
-      { companyId: createdCompany._id }
-    );
+    const createdCompany = await Company.create({
+      name: user.email,
+      userId: user._id,
+    });
+    await User.updateOne({ _id: user._id }, { companyId: createdCompany._id });
   }
 };
 
 export class InviteUsersHelpers {
-
   public static cancelInvite = async (inviteId: string, companyId: string) => {
     const emailService = new EmailService();
     const existingInvitation = await InvitedUsers.findOne({
-      _id: inviteId, companyId
+      _id: inviteId,
+      companyId,
     });
     if (existingInvitation) {
-      const data = await InvitedUsers.updateOne({ _id: inviteId }, { cancelled: true });
+      const data = await InvitedUsers.updateOne(
+        { _id: inviteId },
+        { cancelled: true }
+      );
       return {
         message: `Invitation cancelled successfully`,
       };
@@ -47,15 +55,26 @@ export class InviteUsersHelpers {
         code: status.CONFLICT,
       });
     }
-  }
+  };
 
-  public static resendInvitation = async (email: string, companyId: string, protocol: string) => {
+  public static resendInvitation = async (
+    email: string,
+    companyId: string,
+    protocol: string
+  ) => {
     const emailService = new EmailService();
     const existingInvitation = await InvitedUsers.findOne({
-      invitedEmail: email, companyId
+      invitedEmail: email,
+      companyId,
     });
     if (existingInvitation) {
-      const data = await InvitedUsers.updateOne({ invitedEmail: email }, { expiry: new Date(Date.now() + 1 * (60 * 60 * 1000)), cancelled: false });
+      const data = await InvitedUsers.updateOne(
+        { invitedEmail: email },
+        {
+          expiry: new Date(Date.now() + 1 * (60 * 60 * 1000)),
+          cancelled: false,
+        }
+      );
       const mailData = createInviteMailData(email, protocol);
       emailService.inviteUserEmail(mailData);
       return {
@@ -67,9 +86,14 @@ export class InviteUsersHelpers {
         code: status.CONFLICT,
       });
     }
-  }
+  };
 
-  public static inviteUsers = async (emails: { role: string, email: string }[], companyId: string, userId: string, protocol: string) => {
+  public static inviteUsers = async (
+    emails: { role: string; email: string }[],
+    companyId: string,
+    userId: string,
+    protocol: string
+  ) => {
     const emailService = new EmailService();
 
     const asyncFilter = async (emailsList, predicate) => {
@@ -81,15 +105,16 @@ export class InviteUsersHelpers {
     const alreadyInvited = await asyncFilter(emails, async (emailObj) => {
       let isInvited = false;
       const existingInvitation = await InvitedUsers.findOne({
-        invitedEmail: emailObj.email
+        invitedEmail: emailObj.email,
       });
       if (existingInvitation) {
         isInvited = true;
       } else {
         const inviation = {
           invitedEmail: emailObj.email,
-          companyId, userId,
-          role: emailObj.role
+          companyId,
+          userId,
+          role: emailObj.role,
         };
         const data = await InvitedUsers.create(inviation);
         const mailData = createInviteMailData(emailObj.email, protocol);
@@ -105,32 +130,33 @@ export class InviteUsersHelpers {
     });
 
     return {
-      message: `Mail with invite sent successfully ${alreadyInvitedEmails.length > 0 ? `except for ${alreadyInvitedEmails.toString()} as they are already invited` : ''}`,
+      message: `Mail with invite sent successfully ${
+        alreadyInvitedEmails.length > 0
+          ? `except for ${alreadyInvitedEmails.toString()} as they are already invited`
+          : ''
+      }`,
     };
-  }
+  };
 
   public static invitedUsers = async (companyId: any) => {
     const pendingInvites = await InvitedUsers.find({
       companyId: companyId._id,
       isAccepted: false,
       cancelled: false,
-      expiry: { $gt: Date.now() }
+      expiry: { $gt: Date.now() },
     });
 
     const expiredInvites = await InvitedUsers.find({
       companyId: companyId._id,
       isAccepted: false,
-      $or: [
-        { expiry: { $lt: Date.now() } },
-        { cancelled: true }
-      ]
+      $or: [{ expiry: { $lt: Date.now() } }, { cancelled: true }],
     });
 
     const acceptedInvites = await InvitedUsers.aggregate([
       {
         $match: {
           isAccepted: true,
-          companyId: companyId._id
+          companyId: companyId._id,
         },
       },
       {
@@ -143,14 +169,14 @@ export class InviteUsersHelpers {
                 $and: [
                   { $expr: { $eq: ['$companyId', '$$companyIds'] } },
                   { $expr: { $eq: ['$email', '$$email'] } },
-                ]
+                ],
               },
             },
             {
               $project: {
                 _id: 1,
                 name: 1,
-                email: 1
+                email: 1,
               },
             },
           ],
@@ -158,15 +184,17 @@ export class InviteUsersHelpers {
         },
       },
       {
-        $unwind: '$userInfo'
-      }
+        $unwind: '$userInfo',
+      },
     ]);
 
     return { pendingInvites, acceptedInvites, expiredInvites };
-  }
+  };
 
-  public static acceptInvite = async (inviteToken: string, userEmail: string) => {
-
+  public static acceptInvite = async (
+    inviteToken: string,
+    userEmail: string
+  ) => {
     const decoded: any = await jwt.verify(inviteToken, JWT_SECRET);
 
     if (!decoded) {
@@ -234,13 +262,20 @@ export class InviteUsersHelpers {
 
     if (!Boolean(invite.companyId) && inviter.roles === 'Super Admin') {
       isInviterSuperAdmin = true;
-      const createdCompany = await Company.create({ name: userEmail, userId: user._id });
+      const createdCompany = await Company.create({
+        name: userEmail,
+        userId: user._id,
+      });
       newCompanyId = createdCompany._id;
     }
 
     await User.updateOne(
       { _id: user._id },
-      { referredBy, roles: invite.role, companyId: isInviterSuperAdmin ? newCompanyId : invite.companyId },
+      {
+        referredBy,
+        roles: invite.role,
+        companyId: isInviterSuperAdmin ? newCompanyId : invite.companyId,
+      },
       { new: true }
     );
 
@@ -251,14 +286,13 @@ export class InviteUsersHelpers {
     );
 
     return { message: 'Invitation accepted successfully' };
-  }
+  };
 
-  public static acceptSingleUser = async (document, inviteToken,) => {
+  public static acceptSingleUser = async (document, inviteToken) => {
     const decoded: any = jwt.verify(inviteToken, JWT_SECRET);
-
     if (!decoded) {
       throw new StandardError({
-        message: 'Invalid or expired invie token',
+        message: 'Invalid or expired invite token',
         code: status.UNPROCESSABLE_ENTITY,
       });
     }
@@ -290,13 +324,12 @@ export class InviteUsersHelpers {
       });
     }
 
-
-    // if (moment(invite.expiry).isBefore(Date.now())) {
-    //   throw new StandardError({
-    //     message: 'Invitation is expired',
-    //     code: status.UNPROCESSABLE_ENTITY,
-    //   });
-    // }
+    if (moment(invite.expiry).isBefore(Date.now())) {
+      throw new StandardError({
+        message: 'Invitation is expired',
+        code: status.UNPROCESSABLE_ENTITY,
+      });
+    }
 
     if (invite.cancelled) {
       throw new StandardError({
@@ -308,10 +341,11 @@ export class InviteUsersHelpers {
     // const referredBy = invite.userId;
     // const inviter = await User.findById(invite.userId).lean();
     document.companyId = invite.companyId._id;
+    console.log('document:invite', document);
     return await InvitedUsers.updateOne(
       { _id: invite._id },
       { isAccepted: true },
       { new: true }
     );
-  }
+  };
 }

@@ -1,11 +1,11 @@
-const sgMail = require("@sendgrid/mail");
+const sgMail = require('@sendgrid/mail');
 import { config } from '../config';
 
 export class EmailService {
   supportEmail;
   sendgridTemplateID;
   testEmail: string = config.SENDGRID_TEST_EMAIL;
-  environment: string = 'production'
+  environment: string = 'production';
   constructor() {
     sgMail.setApiKey(config.SENDGRID_API_KEY);
   }
@@ -20,17 +20,17 @@ export class EmailService {
       Message: ${message}
       `,
     };
-    return this.sendgridEmail(mailOptions)
+    return this.sendgridEmail(mailOptions);
   };
 
   public sendPWResetEmail = (email, link) => {
     let mailOptions = {
       from: config.SENDGRID_USER_EMAIL,
       to: email,
-      subject: "Reset Password",
+      subject: 'Reset Password',
       html: link,
     };
-    return this.sendgridEmail(mailOptions)
+    return this.sendgridEmail(mailOptions);
   };
 
   public sendEmail = async ({ subject, email, data }) => {
@@ -42,16 +42,16 @@ export class EmailService {
     };
 
     try {
-      return this.sendgridEmail(mailOptions)
+      return this.sendgridEmail(mailOptions);
     } catch (error) {
-      console.log(error.response.body, "Email Error");
+      console.log(error.response.body, 'Email Error');
     }
   };
 
   public sendgridTemplate = async ({ data, client }) => {
     const clientFullName = client.fullName
       ? client.fullName.toUpperCase()
-      : " User";
+      : ' User';
     const adminMailRestaurantOptions = {
       from: `${this.supportEmail}`,
       to: `${client.email}`,
@@ -61,7 +61,7 @@ export class EmailService {
     try {
       await sgMail.send(adminMailRestaurantOptions);
     } catch (e) {
-      console.log(e.response.body, "Email Error");
+      console.log(e.response.body, 'Email Error');
     }
   };
 
@@ -75,7 +75,7 @@ export class EmailService {
       Thanks for joining.
       `,
     };
-    return this.sendgridEmail(mailOptions)
+    return this.sendgridEmail(mailOptions);
   };
 
   public subscriptionRenewalSuccessEmail = (userDetails) => {
@@ -88,7 +88,7 @@ export class EmailService {
       Your  subscription is renewed.
       `,
     };
-    return this.sendgridEmail(mailOptions)
+    return this.sendgridEmail(mailOptions);
   };
 
   public subscriptionRenewalFailedEmail = (userDetails) => {
@@ -101,10 +101,8 @@ export class EmailService {
       We were not able to renew your subscription. Please manually renew it.
       `,
     };
-    return this.sendgridEmail(mailOptions)
+    return this.sendgridEmail(mailOptions);
   };
-
-
 
   public sendCancellationEmail = (userDetails) => {
     let mailOptions = {
@@ -116,10 +114,11 @@ export class EmailService {
       We have successfully cancelled you renewal .
       `,
     };
-    return this.sendgridEmail(mailOptions)
+    return this.sendgridEmail(mailOptions);
   };
 
-  public inviteUserEmail = (details : { email: string, link: string }) => {
+  public inviteUserEmail = (details: { email: string; link: string }) => {
+    console.log('details:', details.link);
     let mailOptions = {
       from: config.SENDGRID_USER_EMAIL,
       to: details.email,
@@ -130,10 +129,15 @@ export class EmailService {
       <p>Please click <a href="${details.link}"">here</a></p>
       `,
     };
-    return this.sendgridEmail(mailOptions)
+    return this.sendgridEmail(mailOptions);
   };
 
-  public refundEmail = (details : { email: string, amount: number, currency: string, status: string }) => {
+  public refundEmail = (details: {
+    email: string;
+    amount: number;
+    currency: string;
+    status: string;
+  }) => {
     let mailOptions = {
       from: config.SENDGRID_USER_EMAIL,
       to: details.email,
@@ -143,14 +147,14 @@ export class EmailService {
       <p>Refund of amount ${details.currency} ${details.amount} has been initiated with the status of ${details.status}.</p>
       `,
     };
-    
-    return this.sendgridEmail(mailOptions)
+
+    return this.sendgridEmail(mailOptions);
   };
 
-  private sendgridEmail = (mailOptions : any) => {
-    if(config.NODE_ENV !== this.environment){
+  private sendgridEmail = (mailOptions: any) => {
+    if (config.NODE_ENV !== this.environment) {
       mailOptions.to = this.testEmail;
     }
     return sgMail.send(mailOptions);
-  }
+  };
 }

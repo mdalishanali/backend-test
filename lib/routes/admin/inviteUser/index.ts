@@ -10,12 +10,33 @@ export class InviteUserRouter {
   router: express.Router;
   constructor() {
     this.router = express.Router();
-    this.router.post('/invite', middleware.requireAdmin, InviteUserRoutes.inviteUser);
-    this.router.post('/resend-invite', middleware.requireAdmin, InviteUserRoutes.resendInvites);
-    this.router.get('/invited-users', middleware.requireAdmin, InviteUserRoutes.getInvitedUser);
-    this.router.get('/cancelInvite/:id', middleware.requireAdmin, InviteUserRoutes.cancelInvite);
-    this.router.post('/invite/single-user', middleware.requireAdminOrModerator, InviteUserRoutes.inviteSingleUser);
-    this.router.get('/all-invited-users', middleware.requireAdmin, InviteUserRoutes.getAllInvitedUser);
-    this.router.put('/updateInvite/:id', InviteUserRoutes.updateInvite);
+    this.router
+      .post('/invite', middleware.requireAdmin, InviteUserRoutes.inviteUser)
+      .post(
+        '/resend-invite',
+        middleware.requireAdmin,
+        InviteUserRoutes.resendInvites
+      )
+      .get(
+        '/invited-users',
+        middleware.requireAdmin,
+        InviteUserRoutes.getInvitedUser
+      )
+      .get(
+        '/cancelInvite/:id',
+        middleware.requireAdmin,
+        InviteUserRoutes.cancelInvite
+      )
+      .post(
+        '/invite/single-user',
+        middleware.requireAdminOrModerator,
+        InviteUserRoutes.inviteSingleUser
+      )
+      .get(
+        '/all-invited-users',
+        middleware.requireAdmin,
+        InviteUserRoutes.getAllInvitedUser
+      )
+      .put('/updateInvite/:id', InviteUserRoutes.updateInvite);
   }
 }

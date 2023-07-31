@@ -12,7 +12,6 @@ import { InvitedUsers, User, Company } from '../../db';
 const JWT_SECRET: string = config.JWT_SECRET || 'i am a tea pot';
 
 export class UtilsRoutes {
-
   public static findAllCollections = async (
     req: AuthenticatedRequest,
     res: express.Response,
@@ -24,17 +23,26 @@ export class UtilsRoutes {
       Object.keys(collections).forEach(function (name) {
         names.push(name);
       });
-      let removeThese = ["users", "payments", "reviews", "invitedusers", "refunds", "companies", "fcmtokens",
+      let removeThese = [
+        'users',
+        'payments',
+        'reviews',
+        'invitedusers',
+        'refunds',
+        'companies',
+        'fcmtokens',
+        'referrals',
+        'subscriptions',
+        'subscriptionplans',
       ];
       names = names.filter((val) => !removeThese.includes(val));
       res.locals.code = status.OK;
-      res.locals.res_obj = { names }
+      res.locals.res_obj = { names };
       return next();
     } catch (error) {
       next(error);
     }
-
-  }
+  };
 
   public static findAllSidebarItems = async (
     req: AuthenticatedRequest,
@@ -43,13 +51,12 @@ export class UtilsRoutes {
   ) => {
     try {
       const user = req.user;
-      const data = await UtilsHelpers.findSidebarItems(user.email)
+      const data = await UtilsHelpers.findSidebarItems(user.email);
       res.locals.code = status.OK;
-      res.locals.res_obj = { data }
+      res.locals.res_obj = { data };
       return next();
     } catch (error) {
       next(error);
     }
-
-  }
+  };
 }

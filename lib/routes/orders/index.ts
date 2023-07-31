@@ -1,4 +1,3 @@
-
 // NPM Deps
 import * as express from 'express';
 
@@ -12,9 +11,7 @@ export class OrderRouter {
   constructor() {
     this.router = express.Router();
     this.router.use(middleware.requireLogin);
-    this.router
-      .get('/', OrderRoutes.get)
-      .post('/', OrderRoutes.create)
+    this.router.get('/', OrderRoutes.get).post('/', OrderRoutes.create);
     this.router
       .get('/:id', OrderRoutes.getOne)
       .put('/:id', OrderRoutes.update)

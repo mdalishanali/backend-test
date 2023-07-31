@@ -241,10 +241,8 @@ export class SubscriptionHelpers {
       recurring: { interval: 'month' },
       product: product.id,
     };
-    if (document.billingPeriod) {
-    }
 
-    switch (document?.billingPeriod) {
+    switch (document?.type) {
       case '3months':
         priceParameter.recurring['interval_count'] = 3;
         break;
@@ -271,7 +269,7 @@ export class SubscriptionHelpers {
       subscriptionPlanDocument
     );
 
-    return { subscriptionPlan };
+    return { subscriptionPlan, price };
   };
 
   public static pricesList = async (productId: string) => {
@@ -312,7 +310,7 @@ export class SubscriptionHelpers {
           quantity: 1,
         },
       ],
-      success_url: `http://${config.HOST}/subscription-plans`,
+      success_url: `http://${config.HOST}/payment/success`,
       cancel_url: `http://${config.HOST}/`,
       customer: customer,
     });
@@ -350,7 +348,7 @@ export class SubscriptionHelpers {
               );
 
               const isSubscriptionPlanPresent = await SubscriptionPlan.findOne({
-                priceId: plan.product.id,
+                priceId: plan.id,
               });
 
               let subscriptionPlan;

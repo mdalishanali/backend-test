@@ -422,40 +422,38 @@ export class AuthRoutes {
   };
 
   public static registerInviteUser = async (document) => {
-    try {
-      const { email, password, oauth, name, companyId } = document;
-      validateRegisterFields(document);
-      const role = 'Moderator';
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        throw new StandardError({
-          message: 'Email already in use',
-          code: status.CONFLICT,
-        });
-      }
-
-      const firebaseAuthUser = await firebaseService.createUser(
-        name,
-        email,
-        password
-      );
-      const { uid } = firebaseAuthUser;
-
-      const user = await User.create({
-        email,
-        firebaseUid: uid,
-        name,
-        oauth,
-        hasPassword: true,
-        companyId,
-        roles: role,
+    const { email, password, oauth, name, companyId } = document;
+    validateRegisterFields(document);
+    const role = 'Moderator';
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      throw new StandardError({
+        message: 'Email already in use',
+        code: status.CONFLICT,
       });
+    }
 
-      const data = {
-        token: jwt.encode(getJwtPayload(user), AuthRoutes.JWT_SECRET),
-        user,
-      };
-      return data;
-    } catch (error) {}
+    const firebaseAuthUser = await firebaseService.createUser(
+      name,
+      email,
+      password
+    );
+    const { uid } = firebaseAuthUser;
+
+    const user = await User.create({
+      email,
+      firebaseUid: uid,
+      name,
+      oauth,
+      hasPassword: true,
+      companyId,
+      roles: role,
+    });
+
+    const data = {
+      token: jwt.encode(getJwtPayload(user), AuthRoutes.JWT_SECRET),
+      user,
+    };
+    return data;
   };
 }

@@ -1,7 +1,7 @@
 import * as express from 'express';
 
 import { AdminRouter } from './admin/admin';
-      import { TodoRouter } from './todo';
+import { TodoRouter } from './todo';
 import { AuthRouter } from './auth';
 // import { PasswordRouter } from './password';
 
@@ -34,7 +34,7 @@ export const api = express.Router();
 api.use(middleware.jwtDecoder);
 
 api.use('/admin', new AdminRouter().router);
-      api.use('/todo', new TodoRouter().router);
+api.use('/todo', new TodoRouter().router);
 api.use('/superAdmin', new SuperAdminRouter().router);
 
 // api.use('/password', new PasswordRouter().router);

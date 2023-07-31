@@ -6,7 +6,6 @@ import { InviteUsersHelpers } from './helpers';
 import { AuthenticatedRequest } from '../../../interfaces/authenticated-request';
 
 export class InviteUserRoutes {
-
   public static resendInvites = async (
     req: AuthenticatedRequest,
     res: express.Response,
@@ -15,12 +14,16 @@ export class InviteUserRoutes {
     try {
       const email: string = req.body.document.email;
       const userId = req.user._id;
-      const data = await InviteUsersHelpers.resendInvitation(email, userId, req.protocol);
+      const data = await InviteUsersHelpers.resendInvitation(
+        email,
+        userId,
+        req.protocol
+      );
       res.json({ data });
     } catch (error) {
       next(error);
     }
-  }
+  };
 
   public static inviteUser = async (
     req: AuthenticatedRequest,
@@ -28,7 +31,8 @@ export class InviteUserRoutes {
     next: express.NextFunction
   ) => {
     try {
-      const emails = req.body.document.emails.length > 0 ? req.body.document.emails : [];
+      const emails =
+        req.body.document.emails.length > 0 ? req.body.document.emails : [];
       const userId = req.user._id;
 
       if (emails.length < 1) {
@@ -38,14 +42,18 @@ export class InviteUserRoutes {
         });
       }
 
-      const data = await InviteUsersHelpers.inviteUsers(emails, userId, req.protocol);
+      const data = await InviteUsersHelpers.inviteUsers(
+        emails,
+        userId,
+        req.protocol
+      );
       res.locals.code = status.OK;
       res.locals.res_obj = { data };
       return next();
     } catch (error) {
       next(error);
     }
-  }
+  };
 
   public static getInvitedUser = async (
     req: AuthenticatedRequest,
@@ -53,7 +61,6 @@ export class InviteUserRoutes {
     next: express.NextFunction
   ) => {
     try {
-
       const userId = req.user._id;
       const data = await InviteUsersHelpers.invitedUsers(userId);
       res.locals.code = status.OK;
@@ -62,7 +69,7 @@ export class InviteUserRoutes {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
   public static cancelInvite = async (
     req: AuthenticatedRequest,
@@ -79,7 +86,7 @@ export class InviteUserRoutes {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
   public static inviteSingleUser = async (
     req: AuthenticatedRequest,
@@ -96,15 +103,19 @@ export class InviteUserRoutes {
           code: status.CONFLICT,
         });
       }
-
-      const data = await InviteUsersHelpers.inviteSingleUser(inviteUser, companyId, userId, req.protocol);
+      const data = await InviteUsersHelpers.inviteSingleUser(
+        inviteUser,
+        companyId,
+        userId,
+        req.protocol
+      );
       res.locals.code = status.OK;
       res.locals.res_obj = { data };
       return next();
     } catch (error) {
       next(error);
     }
-  }
+  };
 
   public static getAllInvitedUser = async (
     req: AuthenticatedRequest,
@@ -114,14 +125,14 @@ export class InviteUserRoutes {
     try {
       const query = req.query;
       const user = req.user;
-      const data = await InviteUsersHelpers.findAllInvitedUser(query,user);
+      const data = await InviteUsersHelpers.findAllInvitedUser(query, user);
       res.locals.code = status.OK;
       res.locals.res_obj = { data };
       return next();
     } catch (error) {
       next(error);
     }
-  }
+  };
 
   public static updateInvite = async (
     req: AuthenticatedRequest,
@@ -131,13 +142,14 @@ export class InviteUserRoutes {
     try {
       const inviteId = req.params.id;
       const permissions = req.body.permissions;
-      const data = await InviteUsersHelpers.updateInvite(inviteId, permissions);
+      const data = await InviteUsersHelpers.updateInvite(inviteId, {
+        permissions,
+      });
       res.locals.code = status.OK;
       res.locals.res_obj = { data };
       return next();
     } catch (error) {
       next(error);
     }
-  }
-
+  };
 }

@@ -17,7 +17,6 @@ import { api } from './routes/api';
 import { config } from './config';
 
 try {
-
   const app = express();
   app.use(cors());
   app.use(busboy());
@@ -35,6 +34,9 @@ try {
 
   // Set our api routes
   app.use('/api', api);
+  app.use('/raman', (req, res) => {
+    res.send('HI');
+  });
 
   // Catch all other routes and return the index file
   app.get('*', (req, res) => {
@@ -55,8 +57,6 @@ try {
   server.listen(port, () => console.info(`API running on localhost:${port}`));
 
   module.exports = app;
-
 } catch (error) {
   process.exit(1);
 }
-
