@@ -1,17 +1,16 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "server/lib/index.js",
-            "command": "npm run tsc",
-            "use": "@vercel/node",
-            "config": { "includeFiles": ["dist/**"] }
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "server/lib/index.js"
-        }
-    ]
+  "version": 2,
+  "builds": [
+    {
+      "command": "npm run tsc",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["dist/**"] }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server/lib/index.js"
+    }
+  ]
 }
