@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ng build && tsc --project lib && NODE_ENV=production node server/lib/index.js",
     "tsc-watch": "node verifyEnvBackEnd && tsc --project lib --watch",
-    "build": "tsc --project lib",
+		"build": "rimraf dist && tsc",
     "tsc": "node verifyEnvBackEnd.js && tsc --project lib",
     "server": "nodemon server/lib/index.js",
     "windows-server": "nodemon server/lib/index.js",
