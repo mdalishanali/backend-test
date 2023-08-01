@@ -1,38 +1,56 @@
+// {
+//   "compileOnSave": false,
+//   "compilerOptions": {
+//     "outDir": "../server",
+//     "sourceMap": true,
+//     "allowJs": true,
+//     "skipLibCheck": true,
+//     "declaration": false,
+//     "moduleResolution": "node",
+//     "experimentalDecorators": true,
+//     "target": "es5",
+//     "typeRoots": [
+//       "node_modules/@types"
+//     ],
+//     "baseUrl": ".",
+//     "paths": {
+//       "services": [
+//         "./services/*"
+//       ],
+//       "lib/*": [
+//         "./*"
+//       ],
+//       "db/*": [
+//         "./db/*"
+//       ],
+//       "interfaces": [
+//         "./interfaces"
+//       ]
+//     },
+//     "lib": [
+//       "es2017",
+//       "dom"
+//     ]
+//   },
+//   "exclude": [
+//     "node_modules"
+//   ]
+// }
+
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "../server",
-    "sourceMap": true,
-    "allowJs": true,
-    "skipLibCheck": true,
-    "declaration": false,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
+    "noImplicitAny": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "sourceMap": true,
+    "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "services": [
-        "./services/*"
-      ],
-      "lib/*": [
-        "./*"
-      ],
-      "db/*": [
-        "./db/*"
-      ],
-      "interfaces": [
-        "./interfaces"
-      ]
-    },
-    "lib": [
-      "es2017",
-      "dom"
-    ]
+      "*": ["node_modules/*", "src/types/*"]
+    }
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./**/*"]
 }
