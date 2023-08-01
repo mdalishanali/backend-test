@@ -5,6 +5,7 @@
   "scripts": {
     "start": "ng build && tsc --project lib && NODE_ENV=production node server/lib/index.js",
     "tsc-watch": "node verifyEnvBackEnd && tsc --project lib --watch",
+    "build": "tsc --project lib",
     "tsc": "node verifyEnvBackEnd.js && tsc --project lib",
     "server": "nodemon server/lib/index.js",
     "windows-server": "nodemon server/lib/index.js",
@@ -69,6 +70,7 @@
     "node-geocoder": "^4.2.0",
     "nodemon": "^2.0.12",
     "referral-codes": "^2.0.3",
+    "rimraf": "^5.0.1",
     "rxjs": "^6.6.0",
     "rxjs-compat": "^6.6.7",
     "standard-error": "^1.1.0",
